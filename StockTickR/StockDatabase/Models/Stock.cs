@@ -32,46 +32,38 @@ namespace StockDatabase.Models {
             get {
                 return _price;
             }
-            set
-            {
-                if (_price == value)
-                {
+            set {
+                if (_price == value) {
                     return;
                 }
 
                 LastChange = value - _price;
                 _price = value;
 
-                ResetDayOpenFromYesterday();
+                ResetDayOpenFromYesterday ();
 
-                if (DayOpen == 0)
-                {
+                if (DayOpen == 0) {
                     DayOpen = _price;
                 }
 
-                if (_price < DayLow || DayLow == 0)
-                {
+                if (_price < DayLow || DayLow == 0) {
                     DayLow = _price;
                 }
-                if (_price > DayHigh)
-                {
+                if (_price > DayHigh) {
                     DayHigh = _price;
                 }
                 UpdateTime = DateTime.Now;
             }
         }
 
-        private void ResetDayOpenFromYesterday()
-        {
-            if (UpdatedYesterdayOrEarlier(UpdateTime))
-            {
+        private void ResetDayOpenFromYesterday () {
+            if (UpdatedYesterdayOrEarlier (UpdateTime)) {
                 DayOpen = 0;
             }
         }
 
-        private bool UpdatedYesterdayOrEarlier(DateTime time)
-        {
-            return DateTime.Today - time.Date >= TimeSpan.FromDays(1);
+        private bool UpdatedYesterdayOrEarlier (DateTime time) {
+            return DateTime.Today - time.Date >= TimeSpan.FromDays (1);
         }
     }
 }

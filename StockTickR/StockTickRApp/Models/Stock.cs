@@ -16,7 +16,7 @@ namespace StockTickR.Models {
         public decimal Change { get; set; }
 
         public double PercentChange { get; set; }
-        
+
         public decimal Price { get; set; }
     }
 }

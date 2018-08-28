@@ -42,23 +42,20 @@ namespace StocksDatabase.Controllers {
             }
             var dbEntity = GetDbEntity (stock);
             if (dbEntity == null) {
-                if (ModelState.IsValid)
-                {
-                    return InsertToDatabase(stock);
+                if (ModelState.IsValid) {
                     WatchOneStock (stock, "Insert Single Stock");
+                    return InsertToDatabase (stock);
                 }
-            } else if (ModelState.IsValid)
-            {
+            } else if (ModelState.IsValid) {
                 dbEntity.Price = stock.Price;
-                return UpdateStockInDatabase(stock);
                 WatchOneStock (stock, "Update Single Stock");
+                return UpdateStockInDatabase (stock);
             }
             return View (stock);
         }
 
-        private IActionResult UpdateStockInDatabase(Stock stock)
-        {
-            return ExecuteTransaction(() => UnitOfWork.Stocks.Update(stock));
+        private IActionResult UpdateStockInDatabase (Stock stock) {
+            return ExecuteTransaction (() => UnitOfWork.Stocks.Update (stock));
         }
 
         private void WatchOneStock (Stock stock, string prefix) {
@@ -68,66 +65,53 @@ namespace StocksDatabase.Controllers {
             }
         }
 
-        private IActionResult InsertToDatabase(Stock stock)
-        {
-            return ExecuteTransaction(() => UnitOfWork.Stocks.Insert(stock));
+        private IActionResult InsertToDatabase (Stock stock) {
+            return ExecuteTransaction (() => UnitOfWork.Stocks.Insert (stock));
         }
 
         // POST: stocks/
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult PostCreate ([FromBody] IEnumerable<Stock> stocks)
-        {
-            if (stocks == null || !stocks.Any())
-            {
-                return View(stocks);
+        public IActionResult PostCreate ([FromBody] IEnumerable<Stock> stocks) {
+            if (stocks == null || !stocks.Any ()) {
+                return View (stocks);
             }
-            
-            stocks.ToList().ForEach(stock => WatchOneStock(stock, "Apple", "NO DB CONTEXT"));
 
-            List<Stock> stocksFromDb = GetStocksFromDb(stocks).ToList();            
-            stocksFromDb.ForEach(stock => WatchOneStock(stock, "Apple", "WITH DB CONTEXT"));
+            List<Stock> stocksFromDb = GetStocksFromDb (stocks).ToList ();
+            UpdateStockPricesInDbEntities (stocks, stocksFromDb);
+            stocksFromDb.ForEach (stock => WatchOneStock (stock, "WITH DB CONTEXT + PRICE UPDATE"));
 
-            UpdateStockPricesInDbEntities(stocks, stocksFromDb);            
-            stocksFromDb.ForEach(stock => WatchOneStock(stock, "Apple", "WITH DB CONTEXT + PRICE UPDATE"));
+            SaveToDatabase (stocksFromDb);
 
-            SaveToDatabase(stocksFromDb);
-
-            return View(stocks);
+            return View (stocks);
         }
 
-        private void SaveToDatabase(List<Stock> stocksFromDb)
-        {
-            stocksFromDb.ForEach(stock => PostCreate(stock));
+        private void SaveToDatabase (List<Stock> stocksFromDb) {
+            stocksFromDb.ForEach (stock => PostCreate (stock));
         }
 
-        private void UpdateStockPricesInDbEntities(IEnumerable<Stock> stocks, List<Stock> stocksFromDb)
-        {
-            stocksFromDb.ForEach(stock => UpdatePrice(stock, stocks.First(s => s.Symbol == stock.Symbol).Price));
+        private void UpdateStockPricesInDbEntities (IEnumerable<Stock> stocks, List<Stock> stocksFromDb) {
+            stocksFromDb.ForEach (stock => UpdatePrice (stock, stocks.First (s => s.Symbol == stock.Symbol).Price));
         }
 
-        private IEnumerable<Stock> GetStocksFromDb(IEnumerable<Stock> stocks)
-        {
-            var stocksFromDb = new List<Stock>();
-            stocks.ToList().ForEach(stock => stocksFromDb.Add(GetStockDbEntity(stock)));
+        private IEnumerable<Stock> GetStocksFromDb (IEnumerable<Stock> stocks) {
+            var stocksFromDb = new List<Stock> ();
+            stocks.ToList ().ForEach (stock => stocksFromDb.Add (GetStockDbEntity (stock)));
             return stocksFromDb;
         }
 
-        private Stock UpdatePrice(Stock dbEntity, Decimal price)
-        {
+        private Stock UpdatePrice (Stock dbEntity, Decimal price) {
             dbEntity.Price = price;
             return dbEntity;
         }
 
-        private Stock GetStockDbEntity(Stock stock)
-        {
-            return GetDbEntity(stock) ?? stock;
+        private Stock GetStockDbEntity (Stock stock) {
+            return GetDbEntity (stock) ?? stock;
         }
 
-        private Stock GetDbEntity(Stock stock)
-        {
-            return UnitOfWork.Stocks.GetStockBySymbol(stock.Symbol);
+        private Stock GetDbEntity (Stock stock) {
+            return UnitOfWork.Stocks.GetStockBySymbol (stock.Symbol);
         }
 
         private IActionResult ExecuteTransaction (Action action) {
