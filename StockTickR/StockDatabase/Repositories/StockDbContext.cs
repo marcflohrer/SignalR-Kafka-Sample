@@ -24,6 +24,7 @@ namespace StockDatabase.Repositories {
                 e.Property (b => b.DayOpen).HasColumnType ("decimal(10, 2)");
                 e.Property (b => b.DayHigh).HasColumnType ("decimal(10, 2)");
                 e.Property (b => b.LastChange).HasColumnType ("decimal(10, 2)");
+                e.Property (b => b.UpdateTime).HasColumnType ("datetime2(7)");
             });
         }
 

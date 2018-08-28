@@ -13,6 +13,8 @@ namespace StockDatabase.Models {
 
         public decimal LastChange { get; private set; }
 
+        public DateTime UpdateTime { get; private set; }
+
         public decimal Change {
             get {
                 return Price - DayOpen;
@@ -47,6 +49,7 @@ namespace StockDatabase.Models {
                 if (_price > DayHigh) {
                     DayHigh = _price;
                 }
+                UpdateTime = DateTime.Now;
             }
         }
     }
