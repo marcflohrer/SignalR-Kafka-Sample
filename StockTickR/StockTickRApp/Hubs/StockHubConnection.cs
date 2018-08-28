@@ -11,8 +11,7 @@ namespace StockTickRApp.Hubs {
             HubConnection = new HubConnectionBuilder ()
                 .WithUrl (CreateHubUri (uri))
                 .ConfigureLogging (logging => {
-                    logging.SetMinimumLevel (LogLevel.Trace);
-                    logging.AddConsole ();
+                    logging.SetMinimumLevel (LogLevel.Debug);
                 })
                 .Build ();
         }

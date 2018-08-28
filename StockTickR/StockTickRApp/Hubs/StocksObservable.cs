@@ -10,20 +10,16 @@ namespace StockTickRApp.Hubs {
         public IDisposable Subscribe (IObserver<T> observer) {
             Log.Information ("Subscribing: " + observer);
             if (!observers.Contains (observer)) {
-                Log.Information ("Adding observer: " + observer);
                 observers.Add (observer);
-                Log.Information ("Number of observers: " + observers.ToArray ().Length);
             }
             return new Unsubscriber<T> (observers, observer);
         }
+        
         public void OnNext (T entity) {
             var numberOfObservers = observers.ToArray ().Length;
             if (numberOfObservers == 0) {
                 Log.Error ("Number of observers: " + numberOfObservers);
-            } else {
-                Log.Information ("Number of observers: " + numberOfObservers);
             }
-
             foreach (var observer in observers) {
                 observer.OnNext (entity);
             }

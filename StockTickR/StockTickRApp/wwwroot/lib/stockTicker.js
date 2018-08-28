@@ -27,7 +27,10 @@ connection.start().then(function () {
     connection.invoke("GetAllStocks").then(function (stocks) {
         for (let i = 0; i < stocks.length; i++) {
             if(stocks[i].symbol === "Apple"){
-                console.log(stocks[i].symbol + " : " +stocks[i].price);
+                let stock = stocks[i];
+                console.log("[Create] " + stock.symbol + " : " + stock.price + ", id = " + stock.id + ", " +stock.change 
+                             + ", " + stock.dayHigh + ", " + stock.dayLow + ", " + stock.dayLow + ", " + stock.lastChange 
+                             + ", " + stock.percentChange);
             }
             displayStock(stocks[i]);
         }
@@ -111,7 +114,9 @@ function marketClosed() {
 
 function displayStock(stock) {
     if(stock.symbol === "Apple"){
-        console.log("display stock: " + stock.symbol + " : " +stock.price);
+        console.log("[Create] " + stock.symbol + " : " + stock.price + ", id = " + stock.id + ", " +stock.change 
+        + ", " + stock.dayHigh + ", " + stock.dayLow + ", " + stock.dayLow + ", " + stock.lastChange 
+        + ", " + stock.percentChange);
     }
     var displayStock = formatStock(stock);
     addOrReplaceStock(stockTableBody, displayStock, 'tr', rowTemplate);
