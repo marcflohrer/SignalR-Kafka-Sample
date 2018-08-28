@@ -90,7 +90,7 @@ namespace StockTickR.Clients {
 
         private void UpdateCache (IEnumerable<Stock> stocks) {
             foreach (var stock in stocks) {
-                while (cache.ContainsKey (stock.Symbol)) {
+                if (cache.ContainsKey (stock.Symbol)) {
                     try {
                         cache.Remove (stock.Symbol);
                     } catch (Exception ex) {
