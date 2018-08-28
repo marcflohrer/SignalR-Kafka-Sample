@@ -19,7 +19,7 @@ namespace StockCollector {
         private static short selectorStockLastIndex = 31;
 
         readonly SemaphoreSlim _updateStockPricesLock = new SemaphoreSlim (1, 1);
-        private bool _updatingStockPrices = false;
+        private bool _updatingStockPrices;
 
         public IObservable<IEnumerable<Stock>> StocksStream (TimeSpan pauseBetweenUpdates, CancellationToken token) => Observable.Generate (StockPrices,
             stock => !token.IsCancellationRequested,
@@ -52,15 +52,22 @@ namespace StockCollector {
 
         public IEnumerable<Stock> UpdatedStockValues {
             get {
-                string html;
+                string html = null;
                 using (var httpClient = new HttpClient {
-                    BaseAddress = financialUrl
+                    BaseAddress = stocksUrl
                 }) {
-                    html = httpClient.GetStringAsync (string.Empty).GetAwaiter ().GetResult ();
+                    while (html == null) {
+                        try {
+                            html = httpClient.GetStringAsync (string.Empty).GetAwaiter ().GetResult ();
+                        } catch (Exception ex) {
+                            Console.WriteLine ("[Error] " + DateTime.Now + ": " + stocksUrl + " : " + ex.Message);
+                            Thread.Sleep (3000);
+                        }
+                    }
                 }
                 var parser = new HtmlParser ();
                 if (html == null) {
-                    Console.WriteLine ("[Error] " + DateTime.Now + " html is null using url as baseaddress: " + financialUrl);
+                    Console.WriteLine ("[Error] " + DateTime.Now + " html is null using url as baseaddress: " + stocksUrl);
                 }
                 var document = parser.Parse (html);
                 List<Stock> stocks = new List<Stock> ();
@@ -70,12 +77,12 @@ namespace StockCollector {
                     }
                     var stockName = document.QuerySelectorAll (string.Format (dowJonesStockNameSelector, i)).FirstOrDefault ()?.Text () ?? string.Empty;
                     if (stockName == null) {
-                        Console.WriteLine ("[Error] " + DateTime.Now + " Stock name is null using css selector " + dowJonesStockNameSelector + " for url " + financialUrl);
+                        Console.WriteLine ("[Error] " + DateTime.Now + " Stock name is null using css selector " + dowJonesStockNameSelector + " for url " + stocksUrl);
                     }
                     double bidPrice = 0;
                     var rawBidPrice = document.QuerySelectorAll (string.Format (dowJonesBidPriceSelector, i)).FirstOrDefault ()?.Text ();
                     if (rawBidPrice == null) {
-                        Console.WriteLine ("[Error] " + DateTime.Now + " Stock Price is null using css selector " + dowJonesStockNameSelector + " for url " + financialUrl);
+                        Console.WriteLine ("[Error] " + DateTime.Now + " Stock Price is null using css selector " + dowJonesStockNameSelector + " for url " + stocksUrl);
                     } else {
                         try {
                             bidPrice = Convert.ToDouble (rawBidPrice.Trim (), CultureInfo);
@@ -89,7 +96,7 @@ namespace StockCollector {
             }
         }
 
-        private Uri financialUrl;
+        private Uri stocksUrl;
         private static string dowJonesStockNameSelector;
         private static string dowJonesBidPriceSelector;
 
@@ -110,7 +117,7 @@ namespace StockCollector {
             }
             string raw = string.Empty;
             if (TryGetEnvironmentVariable ("DOWJONES_LISTING_URL", out raw)) {
-                financialUrl = new Uri (raw);
+                stocksUrl = new Uri (raw);
             }
             if (TryGetEnvironmentVariable ("DOWJONES_STOCKNAME_SELECTOR", out raw)) {
                 dowJonesStockNameSelector = raw;

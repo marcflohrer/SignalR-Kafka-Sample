@@ -56,15 +56,19 @@ namespace StocksDatabase.Controllers {
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public IActionResult PostCreate ([FromBody] IEnumerable<Stock> stocks) {
+            if (stocks == null || !stocks.Any ()) {
+                return View (stocks);
+            }
+
+            if (stocks.FirstOrDefault (s => s.Symbol == "Apple") != null) {
+                _logger.Information ("[PostCreate] count=" + stocks.Count () + " Apple:" + stocks.FirstOrDefault (s => s.Symbol == "Apple").Price);
+            }
+
             var stocksFromDb = new List<Stock> ();
-            stocks.ToList ().ForEach (stock => stocksFromDb.Add (UnitOfWork
-                .Stocks
-                .GetStockBySymbol (stock.Symbol)));
-            var stocksWithChangedPrice = stocksFromDb.Where (stock => stock.Price != stocks.First (s => s.Symbol == stock.Symbol).Price)
-                .ToList ();
-            stocksWithChangedPrice
+            stocks.ToList ().ForEach (stock => stocksFromDb.Add (UnitOfWork.Stocks.GetStockBySymbol (stock.Symbol) ?? stock));
+            stocksFromDb
                 .ForEach (stock => stock.Price = stocks.First (s => s.Symbol == stock.Symbol).Price);
-            stocksWithChangedPrice
+            stocksFromDb
                 .ForEach (stock => PostCreate (stock));
             return View (stocks);
         }

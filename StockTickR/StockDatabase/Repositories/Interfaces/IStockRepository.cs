@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using StockDatabase.Models;
 using StockDatabase.Repositories.Core;
 
-namespace StockDatabase.Repositories {
+namespace StockDatabase.Repositories.Interfaces {
     public interface IStockRepository : IRepository<Stock, int> {
         Stock Insert (Stock stock);
         void Update (Stock stock);

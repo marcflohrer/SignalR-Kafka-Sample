@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +8,9 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core.Enrichers;
 using Serilog.Enrichers.AspNetCore.HttpContext;
-using Serilog.Enrichers.HttpContextData;
 using StockTickR.Clients;
 using StockTickR.Hubs;
+using StockTickRApp.Hubs;
 
 namespace StockTickR {
     public class Startup {
@@ -27,6 +28,8 @@ namespace StockTickR {
         public static IConfigurationRoot Configuration { get; private set; }
         public IHostingEnvironment HostingEnvironment { get; }
 
+        private Uri DatabaseServerUri => new Uri ("http://stockdatabase:8082");
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
             Log.Logger = new LoggerConfiguration ()
@@ -41,7 +44,8 @@ namespace StockTickR {
             services.AddSingleton (Log.Logger);
 
             services.AddSingleton (Configuration);
-            services.AddSingleton<StockClient> ();
+            services.AddSingleton (new StockClient (DatabaseServerUri));
+            services.AddSingleton (new StockHubConnection (DatabaseServerUri));
 
             // Add framework services.
             services.AddMvc ()
@@ -52,8 +56,6 @@ namespace StockTickR {
 
             services.AddSignalR ()
                 .AddMessagePackProtocol ();
-
-            services.AddSingleton<StockTicker> ();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

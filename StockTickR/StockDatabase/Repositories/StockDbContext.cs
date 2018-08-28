@@ -7,7 +7,6 @@ namespace StockDatabase.Repositories {
     public class StockDbContext : DbContext {
         internal DbSet<Stock> Stocks { get; set; }
         public IConfigurationRoot Configuration { get; }
-
         public string DefaultSchema = "dbs";
 
         public StockDbContext (DbContextOptions options, IConfigurationRoot configuration) : base (options) {
@@ -29,10 +28,8 @@ namespace StockDatabase.Repositories {
         }
 
         protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseNpgsql (string.Format (Configuration.GetConnectionString ("StockDatabase"),
-                Configuration["POSTGRES_USER"],
-                Configuration["POSTGRES_PASSWORD"],
-                Configuration["POSTGRES_DB"]));
+            optionsBuilder
+                .UseSqlServer (string.Format (Configuration.GetConnectionString ("DefaultConnection"), Configuration["SA_PASSWORD"]));
         }
 
     }

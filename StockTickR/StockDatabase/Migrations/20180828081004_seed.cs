@@ -1,5 +1,5 @@
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace StockDatabase.Migrations {
     public partial class seed : Migration {
@@ -12,13 +12,13 @@ namespace StockDatabase.Migrations {
                 schema: "dbs",
                 columns : table => new {
                     Id = table.Column<int> (nullable: false)
-                        .Annotation ("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                        Symbol = table.Column<string> (nullable: true),
-                        DayOpen = table.Column<decimal> (nullable: false),
-                        DayLow = table.Column<decimal> (nullable: false),
-                        DayHigh = table.Column<decimal> (nullable: false),
-                        LastChange = table.Column<decimal> (nullable: false),
-                        Price = table.Column<decimal> (nullable: false)
+                        .Annotation ("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        Symbol = table.Column<string> (type: "varchar(256)", nullable : true),
+                        DayOpen = table.Column<decimal> (type: "decimal(10, 2)", nullable : false),
+                        DayLow = table.Column<decimal> (type: "decimal(10, 2)", nullable : false),
+                        DayHigh = table.Column<decimal> (type: "decimal(10, 2)", nullable : false),
+                        LastChange = table.Column<decimal> (type: "decimal(10, 2)", nullable : false),
+                        Price = table.Column<decimal> (type: "decimal(10, 2)", nullable : false)
                 },
                 constraints : table => {
                     table.PrimaryKey ("PK_Stocks", x => x.Id);

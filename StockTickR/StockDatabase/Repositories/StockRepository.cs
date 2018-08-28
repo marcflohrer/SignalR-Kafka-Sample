@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StockDatabase.Models;
 using StockDatabase.Repositories.Core;
+using StockDatabase.Repositories.Interfaces;
 
 namespace StockDatabase.Repositories {
     public class StockRepository : Repository<Stock, int>, IStockRepository {

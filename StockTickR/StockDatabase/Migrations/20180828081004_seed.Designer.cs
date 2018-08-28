@@ -2,13 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StockDatabase.Repositories;
 
 namespace StockDatabase.Migrations {
     [DbContext (typeof (StockDbContext))]
-    partial class StockDbContextModelSnapshot : ModelSnapshot {
-        protected override void BuildModel (ModelBuilder modelBuilder) {
+    [Migration ("20180828081004_seed")]
+    partial class seed {
+        protected override void BuildTargetModel (ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema ("dbs")

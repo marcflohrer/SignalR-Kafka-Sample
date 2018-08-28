@@ -1,23 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Serilog;
-using Serilog.Core.Enrichers;
-using Serilog.Enrichers.AspNetCore.HttpContext;
 using Serilog.Events;
+using StockDatabase.Extensions;
+using StockDatabase.Hubs;
 using StockDatabase.Repositories;
+using StockDatabase.Repositories.Interfaces;
 using StocksDatabase.Controllers;
 
 namespace StockDatabase {
@@ -25,16 +17,31 @@ namespace StockDatabase {
         public Startup (IHostingEnvironment env) {
             Configuration = new ConfigurationBuilder ()
                 .SetBasePath (env.ContentRootPath)
-                .AddJsonFile ("appsettings.json", true, true)
+                .AddJsonFile ("appsettings.json", optional : true, reloadOnChange : true)
                 .AddJsonFile ($"appsettings.{env.EnvironmentName}.json")
                 .AddEnvironmentVariables ()
                 .Build ();
 
             HostingEnvironment = env;
+            ConnectionString = string.Format (
+                Configuration.GetConnectionString ("DefaultConnection"),
+                Configuration["SA_PASSWORD"]);
         }
 
-        public IConfigurationRoot Configuration { get; }
-        public IHostingEnvironment HostingEnvironment { get; }
+        public Startup (IConfigurationRoot configuration, IHostingEnvironment hostingEnvironment) {
+            this.Configuration = configuration;
+            this.HostingEnvironment = hostingEnvironment;
+
+        }
+        public IConfigurationRoot Configuration {
+            get;
+        }
+        public IHostingEnvironment HostingEnvironment {
+            get;
+        }
+        public string ConnectionString {
+            get;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
@@ -46,21 +53,31 @@ namespace StockDatabase {
 
             Log.Logger = new LoggerConfiguration ()
                 .ReadFrom.Configuration (Configuration.GetSection ("Logging"))
-                .Enrich.FromLogContext ()
-                .Enrich.WithProperty ("Environment", HostingEnvironment.EnvironmentName)
+                .MinimumLevel.Override ("Microsoft", LogEventLevel.Warning)
+                //.Enrich.FromLogContext()
+                //.Enrich.WithProperty ("Environment", HostingEnvironment.EnvironmentName)
                 .WriteTo.Console (outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {EventId} {Message:lj} {Properties}{NewLine}{Exception}{NewLine}")
                 .CreateLogger ();
 
             services.AddSingleton (Log.Logger);
             services.AddLogging (loggingBuilder => loggingBuilder.AddSerilog (dispose: true));
-
-            services.AddEntityFrameworkNpgsql ().AddDbContext<StockDbContext> ();
-            services.AddScoped<IStockRepository, StockRepository> ();
-            services.AddScoped<IUnitOfWork, UnitOfWork> ();
-            services.AddScoped<StocksController> ();
             services.AddSingleton (Configuration);
 
-            services.AddMvc ().SetCompatibilityVersion (CompatibilityVersion.Version_2_1)
+            services.AddScoped<IStockRepository, StockRepository> ();
+            services.AddScoped<IUnitOfWork, UnitOfWork> ();
+            services.AddScoped<StocksController, StocksController> ();
+            services.AddSingleton<StockDatabaseSubscription> ();
+            services.AddDbContext<StockDbContext> ();
+
+            services.AddDbContextFactory<StockDbContext> (ConnectionString);
+
+            //services.AddSqlTableDependency<StockDatabaseSubscription>();
+
+            // Add IHubContext's to the dependency container using AddSignalR()
+            services.AddSignalR ();
+
+            services.AddMvc ()
+                .SetCompatibilityVersion (CompatibilityVersion.Version_2_1)
                 .AddRazorPagesOptions (o => {
                     o.Conventions.ConfigureFilter (new IgnoreAntiforgeryTokenAttribute ());
                 });
@@ -69,19 +86,7 @@ namespace StockDatabase {
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure (IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerfactory,
             IApplicationLifetime appLifetime) {
-            loggerfactory.AddConsole (Configuration.GetSection ("Logging"))
-                .AddDebug ()
-                .AddSerilog ();
-
-            app.UseSerilogLogContext (options => {
-                options.EnrichersForContextFactory = context => new [] {
-                // TraceIdentifier property will be available in all chained middlewares. And yes - it is HttpContext specific
-                new PropertyEnricher ("TraceIdentifier", context.TraceIdentifier)
-                };
-            });
-
             // Ensure any buffered events are sent at shutdown
             appLifetime.ApplicationStopped.Register (Log.CloseAndFlush);
 
@@ -94,7 +99,14 @@ namespace StockDatabase {
             }
 
             app.UseStaticFiles ();
+
+            app.UseSignalR (routes => {
+                routes.MapHub<StockHub> ("/stockshub");
+            });
+
             app.UseMvc ();
+
+            app.UseSqlTableDependency<StockDatabaseSubscription> (ConnectionString);
         }
     }
 }

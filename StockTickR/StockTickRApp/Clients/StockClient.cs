@@ -4,36 +4,36 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using StockTickR.Models;
 
 namespace StockTickR.Clients {
     public class StockClient {
-        private HttpClient _client;
-        MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
-        public StockClient () {
-            _client = new HttpClient {
-                BaseAddress = new Uri ("http://stockdatabase:8082/")
+
+        public StockClient (Uri connection) {
+            Connection = connection;
+        }
+
+        private void InitHttpClient () {
+            _httpClient = new HttpClient {
+                BaseAddress = Connection
             };
-            _client.DefaultRequestHeaders.Accept.Clear ();
-            _client.DefaultRequestHeaders.Accept.Add (_mediaType);
+            _httpClient.DefaultRequestHeaders.Accept.Clear ();
+            _httpClient.DefaultRequestHeaders.Accept.Add (_mediaType);
         }
 
-        public IEnumerable<Stock> Get () {
-            var response = _client.GetAsync ("stocks/").GetAwaiter ().GetResult ();
-            response.EnsureSuccessStatusCode ();
-            return response.Content.ReadAsAsync<List<Stock>> ().GetAwaiter ().GetResult ();
-        }
+        private HttpClient _httpClient;
+        MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
 
-        public HttpStatusCode Add (Stock stock) {
-            var response = _client.PostAsJsonAsync ("stocks/" + stock.Id, stock).GetAwaiter ().GetResult ();
-            response.EnsureSuccessStatusCode ();
-            return response.StatusCode;
-        }
+        public Uri Connection { get; }
 
-        public HttpStatusCode AddRange (IEnumerable<Stock> stocks) {
-            var response = _client.PostAsJsonAsync ("stocks/", stocks).GetAwaiter ().GetResult ();
+        public async Task<IEnumerable<Stock>> GetAllStocks () {
+            if (_httpClient == null) {
+                InitHttpClient ();
+            }
+            var response = await _httpClient.GetAsync ("stocks/");
             response.EnsureSuccessStatusCode ();
-            return response.StatusCode;
+            return await response.Content.ReadAsAsync<List<Stock>> ();
         }
     }
 }
