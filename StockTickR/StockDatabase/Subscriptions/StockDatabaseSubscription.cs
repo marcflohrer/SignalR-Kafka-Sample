@@ -1,7 +1,9 @@
 using System;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Serilog;
+using StockDatabase.Hubs;
 using StockDatabase.Models;
 using StockDatabase.Repositories.Interfaces;
 using TableDependency.SqlClient;
@@ -11,22 +13,25 @@ using TableDependency.SqlClient.Base.Enums;
 using TableDependency.SqlClient.Base.EventArgs;
 using TableDependency.SqlClient.Where;
 
-namespace StockDatabase.Hubs {
+namespace StockDatabase.Subscriptions {
     public class StockDatabaseSubscription : IDatabaseSubscription {
         private bool disposedValue = false;
         private readonly IHubContext<StockHub> _hubContext;
         private readonly ILogger _logger;
         private SqlTableDependency<Stock> _tableDependency;
 
-        public StockDatabaseSubscription (IHubContext<StockHub> hubContext, ILogger logger) {
+        public IConfigurationRoot Configuration { get; }
+
+        public StockDatabaseSubscription (IHubContext<StockHub> hubContext, IConfigurationRoot configuration, ILogger logger) {
             _hubContext = hubContext;
+            Configuration = configuration;
             _logger = logger;
         }
 
         public void Configure (string connectionString) {
             _logger.Information ("Configure  _tableDependency...");
             _tableDependency = new SqlTableDependency<Stock> (
-                connectionString, "Stocks", "dbs", null, null, null, DmlTriggerType.All, false, true);
+                connectionString, "Stocks", "dbs", null, null, null, DmlTriggerType.All, false, false);
             _tableDependency.OnChanged += TableDependency_Changed;
             _tableDependency.OnError += TableDependency_OnError;
             Start ();
@@ -39,13 +44,19 @@ namespace StockDatabase.Hubs {
 
         private void TableDependency_Changed (object sender, RecordChangedEventArgs<Stock> e) {
             if (e.ChangeType != ChangeType.None) {
-                if (e.Entity.Symbol == "Apple") {
-                    _logger.Information ("Changed stock price detected: " + e.Entity.Symbol + " : " + e.Entity.Price);
-                }
+                WatchOneStock(e.Entity, Configuration.GetValue<String>("STOCK_TO_WATCH"), "DB-STREAM");
                 var changedEntity = e.Entity;
                 _hubContext.Clients.All.SendAsync ("UpdateStocks", e.Entity);
             } else {
-                _logger.Error ("ChangeType.None: Changed stock price detected: " + e.Entity.Symbol + " : " + e.Entity.Price + ", old: " + e.EntityOldValues.Price);
+                _logger.Error ("ChangeType.None: Changed stock price detected: " + e.Entity.Symbol + " : " + e.Entity.Price + ", old: " + e.EntityOldValues.Price + ", id = " + e.Entity.Id);
+            }
+        }
+
+        private void WatchOneStock(Stock stock, string stockName, string prefix)
+        {
+            if (stock.Symbol == stockName)
+            {
+                _logger.Information("["+prefix+"] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id + ", " +stock.Change + ", " + stock.DayHigh + ", " + stock.DayLow + ", " + stock.DayLow + ", " + stock.LastChange + ", " + stock.PercentChange + ", " + stock.UpdateTime);
             }
         }
 
