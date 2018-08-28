@@ -10,6 +10,7 @@ using StockDatabase.Extensions;
 using StockDatabase.Hubs;
 using StockDatabase.Repositories;
 using StockDatabase.Repositories.Interfaces;
+using StockDatabase.Subscriptions;
 using StocksDatabase.Controllers;
 
 namespace StockDatabase {
@@ -70,8 +71,6 @@ namespace StockDatabase {
             services.AddDbContext<StockDbContext> ();
 
             services.AddDbContextFactory<StockDbContext> (ConnectionString);
-
-            //services.AddSqlTableDependency<StockDatabaseSubscription>();
 
             // Add IHubContext's to the dependency container using AddSignalR()
             services.AddSignalR ();

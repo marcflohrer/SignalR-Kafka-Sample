@@ -69,8 +69,6 @@ namespace StockTickR {
             app.UseSerilogLogContext (options => {
                 options.EnrichersForContextFactory = context => new [] {
                 new PropertyEnricher ("TraceIdentifier", context.TraceIdentifier),
-                new PropertyEnricher ("User.Claims", context.User.Claims),
-                new PropertyEnricher ("User.Identities", context.User.Identities.GetEnumerator ().ToString ()),
                 new PropertyEnricher ("Connection.LocalIpAddress", context.Connection.LocalIpAddress),
                 new PropertyEnricher ("Connection.RemoteIpAddress", context.Connection.RemoteIpAddress)
                 };

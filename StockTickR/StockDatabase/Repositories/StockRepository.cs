@@ -35,7 +35,7 @@ namespace StockDatabase.Repositories {
         }
 
         public void Update (Stock stock) {
-            _logger.Debug ("Update " + stock.Symbol + " " + stock.Id);
+            _logger.Debug ("Update " + stock.Symbol + " id = " + stock.Id);
             _context.Stocks.Update (stock);
             _context.Entry (stock).State = EntityState.Modified;
         }

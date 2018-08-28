@@ -43,16 +43,17 @@ namespace StockTickR.Clients {
             if (stocksThatChanged.Any ()) {
                 HttpResponseMessage response = null;
                 response = PostAsJsonUntilDbIsReadyAsync (stocksThatChanged, response);
-                if (stocksThatChanged.FirstOrDefault (s => s.Symbol == "Apple") != null) {
-                    Console.WriteLine (DateTime.Now + " [Post] /stocks: count=" +
-                        stocksThatChanged.ToList ().Count +
-                        " stocks (i.e. Apple:" + stocksThatChanged.FirstOrDefault (s => s.Symbol == "Apple")?.Price + ")");
-                }
+                stocksThatChanged.ForEach (stock => WatchOneStock (stock, "Apple"));
                 response.EnsureSuccessStatusCode ();
                 UpdateCache (stocksThatChanged);
                 return response.StatusCode;
             } else {
                 return HttpStatusCode.OK;
+            }
+        }
+        private void WatchOneStock (Stock stock, string stockName) {
+            if (stock.Symbol == stockName) {
+                Console.WriteLine (DateTime.Now + " [Information] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id);
             }
         }
 
@@ -108,11 +109,7 @@ namespace StockTickR.Clients {
 
         private bool IsChanged (Stock stock) {
             if (cache.ContainsKey (stock.Symbol)) {
-                if (cache[stock.Symbol] != stock.Price) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return cache[stock.Symbol] != stock.Price;
             } else {
                 return true;
             }
