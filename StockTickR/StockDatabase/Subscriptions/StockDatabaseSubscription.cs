@@ -44,7 +44,7 @@ namespace StockDatabase.Subscriptions {
 
         private void TableDependency_Changed (object sender, RecordChangedEventArgs<Stock> e) {
             if (e.ChangeType != ChangeType.None) {
-                WatchOneStock(e.Entity, Configuration.GetValue<String>("STOCK_TO_WATCH"), "DB-STREAM");
+                WatchOneStock (e.Entity, Configuration.GetValue<String> ("STOCK_TO_WATCH"), "DB-STREAM");
                 var changedEntity = e.Entity;
                 _hubContext.Clients.All.SendAsync ("UpdateStocks", e.Entity);
             } else {
@@ -52,11 +52,9 @@ namespace StockDatabase.Subscriptions {
             }
         }
 
-        private void WatchOneStock(Stock stock, string stockName, string prefix)
-        {
-            if (stock.Symbol == stockName)
-            {
-                _logger.Information("["+prefix+"] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id + ", " +stock.Change + ", " + stock.DayHigh + ", " + stock.DayLow + ", " + stock.DayLow + ", " + stock.LastChange + ", " + stock.PercentChange + ", " + stock.UpdateTime);
+        private void WatchOneStock (Stock stock, string stockName, string prefix) {
+            if (stock.Symbol == stockName) {
+                _logger.Information ("[" + prefix + "] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id + ", " + stock.Change + ", " + stock.DayHigh + ", " + stock.DayLow + ", " + stock.DayLow + ", " + stock.LastChange + ", " + stock.PercentChange + ", " + stock.UpdateTime);
             }
         }
 

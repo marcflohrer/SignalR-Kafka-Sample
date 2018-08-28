@@ -14,7 +14,7 @@ namespace StockTickRApp.Hubs {
             }
             return new Unsubscriber<T> (observers, observer);
         }
-        
+
         public void OnNext (T entity) {
             var numberOfObservers = observers.ToArray ().Length;
             if (numberOfObservers == 0) {

@@ -45,7 +45,7 @@ namespace StockTickR.Hubs {
             StocksObservable = new ObservableWrapper<Stock> ();
             await StockHubConnection.StartAsync (cancelToken.Token);
             StockHubConnection.On<Stock> ("UpdateStocks", (stock) => {
-                WatchOneStock(stock, "Apple");
+                WatchOneStock (stock);
                 StocksObservable.OnNext (stock);
             });
 
@@ -81,11 +81,10 @@ namespace StockTickR.Hubs {
             await Hub.Clients.All.SendAsync ("marketClosed");
         }
 
-        private void WatchOneStock(Stock stock, string stockName)
-        {
-            if (stock.Symbol == stockName)
-            {
-                _logger.Information("[Create] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id + ", " +stock.Change + ", " + stock.DayHigh + ", " + stock.DayLow + ", " + stock.DayLow + ", " + stock.LastChange + ", " + stock.PercentChange);
+        private void WatchOneStock (Stock stock) {
+            var stockNameToWatch = Environment.GetEnvironmentVariable ("STOCK_TO_WATCH") ?? "Acme Inc.";
+            if (stock.Symbol == stockNameToWatch) {
+                _logger.Information ("[Create] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id + ", " + stock.Change + ", " + stock.DayHigh + ", " + stock.DayLow + ", " + stock.DayLow + ", " + stock.LastChange + ", " + stock.PercentChange);
             }
         }
     }

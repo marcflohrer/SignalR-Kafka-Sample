@@ -44,14 +44,14 @@ namespace StocksDatabase.Controllers {
             if (dbEntity == null) {
                 if (ModelState.IsValid)
                 {
-                    WatchOneStock(stock, "Apple", "Insert Single Stock");
                     return InsertToDatabase(stock);
+                    WatchOneStock (stock, "Insert Single Stock");
                 }
             } else if (ModelState.IsValid)
             {
                 dbEntity.Price = stock.Price;
-                WatchOneStock(stock, "Apple", "Update Single Stock");
                 return UpdateStockInDatabase(stock);
+                WatchOneStock (stock, "Update Single Stock");
             }
             return View (stock);
         }
@@ -61,11 +61,10 @@ namespace StocksDatabase.Controllers {
             return ExecuteTransaction(() => UnitOfWork.Stocks.Update(stock));
         }
 
-        private void WatchOneStock(Stock stock, string stockName, string prefix)
-        {
-            if (stock.Symbol == stockName)
-            {
-                _logger.Information("["+prefix+"] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id + ", " +stock.Change + ", " + stock.DayHigh + ", " + stock.DayLow + ", " + stock.DayLow + ", " + stock.LastChange + ", " + stock.PercentChange + ", " + stock.UpdateTime);
+        private void WatchOneStock (Stock stock, string prefix) {
+            var stockToWatch = Environment.GetEnvironmentVariable ("STOCK_TO_WATCH") ?? "Acme Inc.";
+            if (stock.Symbol == stockToWatch) {
+                _logger.Information ("[" + prefix + "] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id + ", " + stock.Change + ", " + stock.DayHigh + ", " + stock.DayLow + ", " + stock.DayLow + ", " + stock.LastChange + ", " + stock.PercentChange + ", " + stock.UpdateTime);
             }
         }
 

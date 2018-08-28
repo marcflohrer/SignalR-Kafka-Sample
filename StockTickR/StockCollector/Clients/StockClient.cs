@@ -12,6 +12,8 @@ namespace StockTickR.Clients {
         private readonly HttpClient _client;
         MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
         private Dictionary<string, decimal> cache = new Dictionary<string, decimal> ();
+
+        private string stockNameToWatch;
         public StockClient () {
             _client = new HttpClient {
                 BaseAddress = new Uri ("http://stockdatabase:8082/")
@@ -43,7 +45,7 @@ namespace StockTickR.Clients {
             if (stocksThatChanged.Any ()) {
                 HttpResponseMessage response = null;
                 response = PostAsJsonUntilDbIsReadyAsync (stocksThatChanged, response);
-                stocksThatChanged.ForEach (stock => WatchOneStock (stock, "Apple"));
+                stocksThatChanged.ForEach (stock => WatchOneStock (stock));
                 response.EnsureSuccessStatusCode ();
                 UpdateCache (stocksThatChanged);
                 return response.StatusCode;
@@ -51,8 +53,9 @@ namespace StockTickR.Clients {
                 return HttpStatusCode.OK;
             }
         }
-        private void WatchOneStock (Stock stock, string stockName) {
-            if (stock.Symbol == stockName) {
+        private void WatchOneStock (Stock stock) {
+            var stockToWatch = Environment.GetEnvironmentVariable ("STOCK_TO_WATCH") ?? "Acme Inc.";
+            if (stock.Symbol == stockToWatch) {
                 Console.WriteLine (DateTime.Now + " [Information] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id);
             }
         }
