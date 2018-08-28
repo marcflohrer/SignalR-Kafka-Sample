@@ -22,6 +22,7 @@ namespace StockTickR.Clients {
 
         public IEnumerable<Stock> Get () {
             var response = _client.GetAsync ("stocks/").GetAwaiter ().GetResult ();
+            Console.WriteLine (DateTime.Now + " Get /stocks: " + response.Content.ReadAsStringAsync ().GetAwaiter ().GetResult ());
             response.EnsureSuccessStatusCode ();
             return response.Content.ReadAsAsync<List<Stock>> ().GetAwaiter ().GetResult ();
         }

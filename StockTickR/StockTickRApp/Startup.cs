@@ -36,7 +36,6 @@ namespace StockTickR {
                 .ReadFrom.Configuration (Configuration.GetSection ("Logging"))
                 .Enrich.FromLogContext ()
                 .Enrich.WithProperty ("Environment", HostingEnvironment.EnvironmentName)
-                .Enrich.WithHttpContextData ()
                 .WriteTo.Console (outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {EventId} {Message:lj} {Properties}{NewLine}{Exception}{NewLine}")
                 .CreateLogger ();
 
@@ -69,8 +68,11 @@ namespace StockTickR {
 
             app.UseSerilogLogContext (options => {
                 options.EnrichersForContextFactory = context => new [] {
-                // TraceIdentifier property will be available in all chained middlewares. And yes - it is HttpContext specific
-                new PropertyEnricher ("TraceIdentifier", context.TraceIdentifier)
+                new PropertyEnricher ("TraceIdentifier", context.TraceIdentifier),
+                new PropertyEnricher ("User.Claims", context.User.Claims),
+                new PropertyEnricher ("User.Identities", context.User.Identities.GetEnumerator ().ToString ()),
+                new PropertyEnricher ("Connection.LocalIpAddress", context.Connection.LocalIpAddress),
+                new PropertyEnricher ("Connection.RemoteIpAddress", context.Connection.RemoteIpAddress)
                 };
             });
 

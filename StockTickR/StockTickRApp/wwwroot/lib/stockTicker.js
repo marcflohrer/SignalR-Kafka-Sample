@@ -26,6 +26,9 @@ let connection = new signalR.HubConnectionBuilder()
 connection.start().then(function () {
     connection.invoke("GetAllStocks").then(function (stocks) {
         for (let i = 0; i < stocks.length; i++) {
+            if(stocks[i].symbol === "Apple"){
+                console.log(stocks[i].symbol + " : " +stocks[i].price);
+            }
             displayStock(stocks[i]);
         }
     });
@@ -107,6 +110,9 @@ function marketClosed() {
 }
 
 function displayStock(stock) {
+    if(stock.symbol === "Apple"){
+        console.log("display stock: " + stock.symbol + " : " +stock.price);
+    }
     var displayStock = formatStock(stock);
     addOrReplaceStock(stockTableBody, displayStock, 'tr', rowTemplate);
     addOrReplaceStock(stockTickerBody, displayStock, 'li', tickerTemplate);

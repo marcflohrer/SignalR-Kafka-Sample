@@ -43,9 +43,15 @@ namespace StocksDatabase.Controllers {
             var already = UnitOfWork.Stocks.GetStockBySymbol (stock.Symbol);
             if (already == null) {
                 if (ModelState.IsValid) {
+                    if (stock.Symbol == "Apple") {
+                        _logger.Information ("[Create] " + stock.Symbol + " : " + stock.Price);
+                    }
                     return ExecuteTransaction (() => UnitOfWork.Stocks.Insert (stock));
                 }
             } else if (ModelState.IsValid) {
+                if (stock.Symbol == "Apple") {
+                    _logger.Information ("[Post] " + stock.Symbol + " : " + stock.Price);
+                }
                 return ExecuteTransaction (() => UnitOfWork.Stocks.Update (stock));
             }
             return View (stock);
