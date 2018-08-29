@@ -9,7 +9,9 @@ namespace StockDatabase.Repositories {
 
         readonly StockDbContext _context;
 
-        private Serilog.ILogger _logger { get; }
+        private Serilog.ILogger _logger {
+            get;
+        }
 
         public StockRepository (StockDbContext stockContext, Serilog.ILogger logger) : base (stockContext, logger) {
             _context = stockContext;

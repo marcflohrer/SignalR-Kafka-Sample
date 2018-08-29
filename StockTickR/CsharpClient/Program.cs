@@ -59,39 +59,48 @@ namespace CsharpClient {
 
     public class Stock {
         public int Id {
-            get; set;
+            get;
+            set;
         }
 
         public string Symbol {
-            get; set;
+            get;
+            set;
         }
 
         public decimal DayOpen {
-            get; private set;
+            get;
+            private set;
         }
 
         public decimal DayLow {
-            get; private set;
+            get;
+            private set;
         }
 
         public decimal DayHigh {
-            get; private set;
+            get;
+            private set;
         }
 
         public decimal LastChange {
-            get; private set;
+            get;
+            private set;
         }
 
         public decimal Change {
-            get; set;
+            get;
+            set;
         }
 
         public double PercentChange {
-            get; set;
+            get;
+            set;
         }
 
         public decimal Price {
-            get; set;
+            get;
+            set;
         }
     }
 }

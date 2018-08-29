@@ -23,7 +23,9 @@ namespace StockTickR.Clients {
         private HttpClient _httpClient;
         MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
 
-        public Uri Connection { get; }
+        public Uri Connection {
+            get;
+        }
 
         public async Task<IEnumerable<Stock>> GetAllStocks () {
             if (_httpClient == null) {

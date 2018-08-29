@@ -59,7 +59,7 @@ namespace StockDatabase {
                 //.Enrich.WithProperty ("Environment", HostingEnvironment.EnvironmentName)
                 .WriteTo.Console (outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {EventId} {Message:lj} {Properties}{NewLine}{Exception}{NewLine}")
                 .CreateLogger ();
-
+            
             services.AddSingleton (Log.Logger);
             services.AddLogging (loggingBuilder => loggingBuilder.AddSerilog (dispose: true));
             services.AddSingleton (Configuration);

@@ -16,7 +16,9 @@ namespace StockDatabase.Subscriptions {
         private readonly ILogger _logger;
         private SqlTableDependency<Stock> _tableDependency;
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfigurationRoot Configuration {
+            get;
+        }
 
         public StockDatabaseSubscription (IHubContext<StockHub> hubContext, IConfigurationRoot configuration, ILogger logger) {
             _hubContext = hubContext;

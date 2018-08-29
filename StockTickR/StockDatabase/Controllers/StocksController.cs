@@ -97,7 +97,7 @@ namespace StocksDatabase.Controllers {
 
         private IEnumerable<Stock> GetStocksFromDb (IEnumerable<Stock> stocks) {
             var stocksFromDb = new List<Stock> ();
-            stocks.ToList ().ForEach (stock => stocksFromDb.Add (GetStockDbEntity (stock)));
+            stocks.ToList ().ForEach (stock => stocksFromDb.Add (GetDbEntityOrNewEntity (stock)));
             return stocksFromDb;
         }
 
@@ -106,8 +106,8 @@ namespace StocksDatabase.Controllers {
             return dbEntity;
         }
 
-        private Stock GetStockDbEntity (Stock stock) {
-            return GetDbEntity (stock) ?? stock;
+        private Stock GetDbEntityOrNewEntity (Stock newEntity) {
+            return GetDbEntity (newEntity) ?? newEntity;
         }
 
         private Stock GetDbEntity (Stock stock) {

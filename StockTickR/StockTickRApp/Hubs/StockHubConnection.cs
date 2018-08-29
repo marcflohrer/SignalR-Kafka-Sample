@@ -4,7 +4,9 @@ using Microsoft.Extensions.Logging;
 
 namespace StockTickRApp.Hubs {
     public class StockHubConnection {
-        public HubConnection HubConnection { get; }
+        public HubConnection HubConnection {
+            get;
+        }
         public StockHubConnection (Uri uri) {
             HubConnection = new HubConnectionBuilder ()
                 .WithUrl (CreateHubUri (uri))
