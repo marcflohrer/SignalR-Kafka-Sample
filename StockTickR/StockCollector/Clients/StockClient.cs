@@ -28,17 +28,6 @@ namespace StockTickR.Clients {
             return response.Content.ReadAsAsync<List<Stock>> ().GetAwaiter ().GetResult ();
         }
 
-        public HttpStatusCode Add (Stock stock) {
-            if (IsChanged (stock)) {
-                var response = _client.PostAsJsonAsync ("stocks/" + stock.Id, stock).GetAwaiter ().GetResult ();
-                Console.WriteLine (DateTime.Now + " Post /stocks: " + stock.Symbol + ":" + stock.Price + ", " + response.Content.ReadAsStringAsync ().GetAwaiter ().GetResult ());
-                response.EnsureSuccessStatusCode ();
-                return response.StatusCode;
-            } else {
-                return HttpStatusCode.OK;
-            }
-        }
-
         public HttpStatusCode AddRange (IEnumerable<Stock> stocks) {
             List<Stock> stocksThatChanged = FindStocksThatChanged (stocks);
             if (stocksThatChanged.Any ()) {
@@ -55,7 +44,7 @@ namespace StockTickR.Clients {
         private void WatchOneStock (Stock stock) {
             var stockToWatch = Environment.GetEnvironmentVariable ("STOCK_TO_WATCH") ?? "Acme Inc.";
             if (stock.Symbol == stockToWatch) {
-                Console.WriteLine (DateTime.Now + " [Information] " + stock.Symbol + " : " + stock.Price + ", id = " + stock.Id);
+                Console.WriteLine (DateTime.Now + " [Information] " + stock.Symbol + " : " + stock.Price);
             }
         }
 
