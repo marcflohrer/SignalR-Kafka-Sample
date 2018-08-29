@@ -1,16 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Reactive;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using AngleSharp.Extensions;
-using AngleSharp.Parser.Html;
-using Microsoft.Extensions.Hosting;
 using StockDatabase.Models;
 using StockTickR.Clients;
 

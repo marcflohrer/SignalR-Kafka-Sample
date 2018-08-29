@@ -1,5 +1,4 @@
 using System;
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -7,11 +6,8 @@ using StockDatabase.Hubs;
 using StockDatabase.Models;
 using StockDatabase.Repositories.Interfaces;
 using TableDependency.SqlClient;
-using TableDependency.SqlClient.Base;
-using TableDependency.SqlClient.Base.Abstracts;
 using TableDependency.SqlClient.Base.Enums;
 using TableDependency.SqlClient.Base.EventArgs;
-using TableDependency.SqlClient.Where;
 
 namespace StockDatabase.Subscriptions {
     public class StockDatabaseSubscription : IDatabaseSubscription {

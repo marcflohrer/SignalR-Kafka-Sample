@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Serilog;
-using StockTickR.Models;
 
 namespace StockTickRApp.Hubs {
     public class ObservableWrapper<T> : IObservable<T> {

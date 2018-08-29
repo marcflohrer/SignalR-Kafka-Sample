@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using StockDatabase.Models;
-using StockTickR.Clients;
 
 namespace StockCollector {
     // Copyright (c) .NET Foundation. Licensed under the Apache License, Version 2.0.

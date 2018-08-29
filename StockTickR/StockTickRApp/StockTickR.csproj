@@ -25,9 +25,7 @@
     <None Include="NuGet.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Repositories\" />
     <Folder Include="Models\" />
-    <Folder Include="Repositories\Core\" />
     <Folder Include="Models\Core\" />
     <Folder Include="Clients\" />
   </ItemGroup>

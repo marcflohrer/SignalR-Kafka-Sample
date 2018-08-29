@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using StockDatabase.Models;
-using StockDatabase.Repositories.Core;
 using StockDatabase.Repositories.Interfaces;
 
 namespace StockDatabase.Repositories {

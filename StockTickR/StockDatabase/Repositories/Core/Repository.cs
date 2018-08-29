@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Serilog;
 using StockDatabase.Models.Core;
 
 namespace StockDatabase.Repositories.Core {

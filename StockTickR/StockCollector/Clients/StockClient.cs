@@ -13,7 +13,6 @@ namespace StockTickR.Clients {
         MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
         private Dictionary<string, decimal> cache = new Dictionary<string, decimal> ();
 
-        private string stockNameToWatch;
         public StockClient () {
             _client = new HttpClient {
                 BaseAddress = new Uri ("http://stockdatabase:8082/")

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using StockDatabase.Hubs;
 using StockDatabase.Repositories.Interfaces;
 
 namespace StockDatabase.Extensions {

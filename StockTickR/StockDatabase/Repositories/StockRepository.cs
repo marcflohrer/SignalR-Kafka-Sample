@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using StockDatabase.Models;
 using StockDatabase.Repositories.Core;
 using StockDatabase.Repositories.Interfaces;
