@@ -5,8 +5,13 @@ using StockDatabase.Models;
 
 namespace StockDatabase.Repositories {
     public class StockDbContext : DbContext {
-        internal DbSet<Stock> Stocks { get; set; }
-        public IConfigurationRoot Configuration { get; }
+        internal DbSet<Stock> Stocks {
+            get;
+            set;
+        }
+        public IConfigurationRoot Configuration {
+            get;
+        }
         public string DefaultSchema = "dbs";
 
         public StockDbContext (DbContextOptions options, IConfigurationRoot configuration) : base (options) {
