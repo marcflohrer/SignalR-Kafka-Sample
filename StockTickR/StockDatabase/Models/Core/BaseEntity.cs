@@ -2,7 +2,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StockDatabase.Models.Core {
     public abstract class BaseEntity<TId> {
-        [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
+        
+        [ForeignKey("Id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public TId Id {
             get;
             set;

@@ -17,7 +17,7 @@ namespace StockDatabase.Repositories {
             modelBuilder.HasDefaultSchema (DefaultSchema);
 
             modelBuilder.Entity<Stock> (e => {
-                e.HasKey (o => o.Id);
+                e.Property (f => f.Id).ValueGeneratedOnAdd ();
                 e.Property (b => b.Symbol).HasColumnType ("varchar(256)");
                 e.Property (b => b.Price).HasColumnType ("decimal(10, 2)");
                 e.Property (b => b.DayLow).HasColumnType ("decimal(10, 2)");
