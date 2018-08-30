@@ -45,3 +45,9 @@ global.json
 BenchmarkDotNet.Artifacts/
 korebuild-lock.txt
 .env
+*.code-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
