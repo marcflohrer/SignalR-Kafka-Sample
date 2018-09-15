@@ -6,14 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
-using StockDatabase.Extensions;
-using StockDatabase.Hubs;
-using StockDatabase.Repositories;
-using StockDatabase.Repositories.Interfaces;
-using StockDatabase.Subscriptions;
+using StockProcessor.Extensions;
+using StockProcessor.Hubs;
+using StockProcessor.Repositories;
+using StockProcessor.Repositories.Interfaces;
+using StockProcessor.Subscriptions;
 using StocksDatabase.Controllers;
 
-namespace StockDatabase {
+namespace StockProcessor {
     public class Startup {
         public Startup (IHostingEnvironment env) {
             Configuration = new ConfigurationBuilder ()
@@ -67,7 +67,7 @@ namespace StockDatabase {
             services.AddScoped<IStockRepository, StockRepository> ();
             services.AddScoped<IUnitOfWork, UnitOfWork> ();
             services.AddScoped<StocksController, StocksController> ();
-            services.AddSingleton<StockDatabaseSubscription> ();
+            services.AddSingleton<StockProcessorSubscription> ();
             services.AddDbContext<StockDbContext> ();
 
             services.AddDbContextFactory<StockDbContext> (ConnectionString);
@@ -105,7 +105,7 @@ namespace StockDatabase {
 
             app.UseMvc ();
 
-            app.UseSqlTableDependency<StockDatabaseSubscription> (ConnectionString);
+            app.UseSqlTableDependency<StockProcessorSubscription> (ConnectionString);
         }
     }
 }

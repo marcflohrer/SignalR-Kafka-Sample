@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace StockDatabase.Controllers {
+namespace StockProcessor.Controllers {
     [Route ("[controller]")]
     public class HomeController : Controller {
         [HttpGet]

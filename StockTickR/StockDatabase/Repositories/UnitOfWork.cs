@@ -1,6 +1,6 @@
-using StockDatabase.Repositories.Interfaces;
+using StockProcessor.Repositories.Interfaces;
 
-namespace StockDatabase.Repositories {
+namespace StockProcessor.Repositories {
     /// Supports all classes in the .NET Framework class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all classes in the .NET Framework; it is the root of the type hierarchy.
     public class UnitOfWork : IUnitOfWork {
         StockDbContext _stockContext {

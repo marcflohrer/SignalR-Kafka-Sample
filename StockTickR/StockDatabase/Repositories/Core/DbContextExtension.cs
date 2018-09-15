@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace StockDatabase.Repositories.Core {
+namespace StockProcessor.Repositories.Core {
     public static class DbContextExtension {
 
         public static bool AllMigrationsApplied (this DbContext context) {

@@ -1,9 +1,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using StockDatabase.Repositories.Interfaces;
+using StockProcessor.Repositories.Interfaces;
 
-namespace StockDatabase.Extensions {
+namespace StockProcessor.Extensions {
     public static class IServiceCollectionExtension {
         public static void AddDbContextFactory<DataContext> (this IServiceCollection services, string connectionString)
         where DataContext : DbContext {

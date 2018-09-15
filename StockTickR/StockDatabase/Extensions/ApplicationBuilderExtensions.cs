@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using StockDatabase.Repositories.Interfaces;
+using StockProcessor.Repositories.Interfaces;
 
-namespace StockDatabase.Extensions {
+namespace StockProcessor.Extensions {
     public static class ApplicationBuilderExtensions {
         public static void UseSqlTableDependency<T> (this IApplicationBuilder app, string connectionString)
         where T : IDatabaseSubscription {

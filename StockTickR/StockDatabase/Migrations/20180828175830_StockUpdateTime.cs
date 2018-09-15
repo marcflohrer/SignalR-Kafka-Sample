@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace StockDatabase.Migrations {
+namespace StockProcessor.Migrations {
     public partial class StockUpdateTime : Migration {
         protected override void Up (MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<DateTime> (

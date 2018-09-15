@@ -1,7 +1,7 @@
 using System;
-using StockDatabase.Models.Core;
+using StockProcessor.Models.Core;
 
-namespace StockDatabase.Models {
+namespace StockProcessor.Models {
     public class Stock : BaseEntity<int> {
         public string Symbol { get; set; }
 

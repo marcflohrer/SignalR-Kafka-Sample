@@ -28,7 +28,7 @@ namespace StockTickR {
         public static IConfigurationRoot Configuration { get; private set; }
         public IHostingEnvironment HostingEnvironment { get; }
 
-        private Uri DatabaseServerUri => new Uri ("http://stockdatabase:8082");
+        private Uri DatabaseServerUri => new Uri ("http://stockprocessor:8082");
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {

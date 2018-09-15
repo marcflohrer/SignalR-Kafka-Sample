@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StockDatabase.Repositories;
-using StockDatabase.Repositories.Core;
+using StockProcessor.Repositories;
+using StockProcessor.Repositories.Core;
 
-namespace StockDatabase {
+namespace StockProcessor {
     public class Program {
         public static void Main (string[] args) {
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StockDatabase.Models.Core {
+namespace StockProcessor.Models.Core {
     public abstract class BaseEntity<TId> {
 
         [ForeignKey ("Id")]

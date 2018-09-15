@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using Microsoft.AspNetCore.Mvc;
-using StockDatabase.Models;
-using StockDatabase.Repositories.Interfaces;
+using StockProcessor.Models;
+using StockProcessor.Repositories.Interfaces;
 
 namespace StocksDatabase.Controllers {
     [Route ("[controller]")]

@@ -1,4 +1,4 @@
-using StockDatabase.Models.Core;
+using StockProcessor.Models.Core;
 
 namespace StockTickR.Models {
     public class Stock : BaseEntity {

@@ -1,9 +1,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using StockDatabase.Models;
+using StockProcessor.Models;
 
-namespace StockDatabase.Repositories {
+namespace StockProcessor.Repositories {
     public class StockDbContext : DbContext {
         internal DbSet<Stock> Stocks {
             get;

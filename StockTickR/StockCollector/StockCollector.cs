@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using AngleSharp.Extensions;
 using AngleSharp.Parser.Html;
-using StockDatabase.Models;
+using StockProcessor.Models;
 
 namespace StockCollector {
     public class StockCollector {

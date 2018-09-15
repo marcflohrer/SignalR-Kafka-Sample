@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using StockDatabase.Repositories.Core;
+using StockProcessor.Repositories.Core;
 
-namespace StockDatabase.Models.Core {
+namespace StockProcessor.Models.Core {
     public abstract class ValueObject : IEquatable<ValueObject> {
         private List<PropertyInfo> properties;
         private List<FieldInfo> fields;

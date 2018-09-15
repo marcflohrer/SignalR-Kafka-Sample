@@ -1,10 +1,10 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using StockDatabase.Models;
-using StockDatabase.Repositories.Core;
-using StockDatabase.Repositories.Interfaces;
+using StockProcessor.Models;
+using StockProcessor.Repositories.Core;
+using StockProcessor.Repositories.Interfaces;
 
-namespace StockDatabase.Repositories {
+namespace StockProcessor.Repositories {
     public class StockRepository : Repository<Stock, int>, IStockRepository {
 
         readonly StockDbContext _context;

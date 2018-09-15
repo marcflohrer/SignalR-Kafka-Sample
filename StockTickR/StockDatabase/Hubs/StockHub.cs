@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
-using StockDatabase.Repositories.Interfaces;
+using StockProcessor.Repositories.Interfaces;
 
-namespace StockDatabase.Hubs {
+namespace StockProcessor.Hubs {
     public class StockHub : Hub {
         private readonly IUnitOfWork _unitOfWork;
 

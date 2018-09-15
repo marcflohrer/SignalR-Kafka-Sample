@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace StockDatabase.Pages {
+namespace StockProcessor.Pages {
     public class ErrorModel : PageModel {
         public string RequestId { get; set; }
 

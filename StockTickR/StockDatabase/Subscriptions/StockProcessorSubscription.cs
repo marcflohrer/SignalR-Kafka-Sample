@@ -2,15 +2,15 @@ using System;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using StockDatabase.Hubs;
-using StockDatabase.Models;
-using StockDatabase.Repositories.Interfaces;
+using StockProcessor.Hubs;
+using StockProcessor.Models;
+using StockProcessor.Repositories.Interfaces;
 using TableDependency.SqlClient;
 using TableDependency.SqlClient.Base.Enums;
 using TableDependency.SqlClient.Base.EventArgs;
 
-namespace StockDatabase.Subscriptions {
-    public class StockDatabaseSubscription : IDatabaseSubscription {
+namespace StockProcessor.Subscriptions {
+    public class StockProcessorSubscription : IDatabaseSubscription {
         private bool disposedValue = false;
         private readonly IHubContext<StockHub> _hubContext;
         private readonly ILogger _logger;
@@ -20,7 +20,7 @@ namespace StockDatabase.Subscriptions {
             get;
         }
 
-        public StockDatabaseSubscription (IHubContext<StockHub> hubContext, IConfigurationRoot configuration, ILogger logger) {
+        public StockProcessorSubscription (IHubContext<StockHub> hubContext, IConfigurationRoot configuration, ILogger logger) {
             _hubContext = hubContext;
             Configuration = configuration;
             _logger = logger;
@@ -63,7 +63,7 @@ namespace StockDatabase.Subscriptions {
 
             #region IDisposable
 
-            ~StockDatabaseSubscription () {
+            ~StockProcessorSubscription () {
                 Dispose (false);
             }
 

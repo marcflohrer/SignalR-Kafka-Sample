@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
-using StockDatabase.Models;
+using StockProcessor.Models;
 
 namespace StockTickR.Clients {
     public class StockClient {
@@ -15,7 +15,7 @@ namespace StockTickR.Clients {
 
         public StockClient () {
             _client = new HttpClient {
-                BaseAddress = new Uri ("http://stockdatabase:8082/")
+                BaseAddress = new Uri ("http://stockprocessor:8082/")
             };
             _client.DefaultRequestHeaders.Accept.Clear ();
             _client.DefaultRequestHeaders.Accept.Add (_mediaType);

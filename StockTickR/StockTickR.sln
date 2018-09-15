@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsharpClient", "CsharpClien
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1DA0F68F-2809-4C3C-92DD-C2AE411F431D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockDatabase", "StockDatabase\StockDatabase.csproj", "{3F67B782-AA14-4355-A862-23E9B0B4DFB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockProcessor", "StockProcessor\StockProcessor.csproj", "{3F67B782-AA14-4355-A862-23E9B0B4DFB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockCollector", "StockCollector\StockCollector.csproj", "{580D3C58-F0AD-4F68-92F2-05A0C1D161A7}"
 EndProject

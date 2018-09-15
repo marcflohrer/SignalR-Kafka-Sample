@@ -21,8 +21,8 @@ services:
     networks:
       - stocksnetwork 
 
-  stockdatabase:
-    image: stockdatabase
+  stockprocessor:
+    image: stockprocessor
     restart: always
     # The mssql-server-linux image requires the following environment flags:
     # ACCEPT_EULA=Y
@@ -36,7 +36,7 @@ services:
     depends_on:
       - "database" 
     build:
-      context: StockDatabase/
+      context: StockProcessor/
       dockerfile: Dockerfile    
     networks:
       - stocksnetwork 
@@ -47,9 +47,9 @@ services:
     env_file:
       - .env
     links:
-      - stockdatabase
+      - stockprocessor
     depends_on:
-      - "stockdatabase" 
+      - "stockprocessor" 
     build:
       context: StockCollector/
       dockerfile: Dockerfile    
