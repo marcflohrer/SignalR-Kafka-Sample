@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using StockProcessor.Models;
 using StockTickR.Clients;
 
-namespace StockCollector {
+namespace StockSimulator {
     public class StockCollectionService : BackgroundService {
         protected override Task ExecuteAsync (CancellationToken stoppingToken) {
-            var stockCollector = new StockCollector ();
+            var stockCollector = new StockSimulator ();
             var stockClient = new StockClient ();
             var observable = stockCollector.StocksStream (TimeSpan.FromSeconds (3), stoppingToken)
                 .Where (stocks => stocks.Any ())

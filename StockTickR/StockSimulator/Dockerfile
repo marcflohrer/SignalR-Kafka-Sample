@@ -25,11 +25,11 @@ EXPOSE ${PORT}
 
 WORKDIR /app
 COPY --from=publish /app .
-RUN chmod +x /app/StockCollector \
+RUN chmod +x /app/StockSimulator \
     && find $sysdirs -xdev \( \
        -name chmod -o \
         \) -delete
 
 USER appuser
 
-ENTRYPOINT ["./StockCollector"]
+ENTRYPOINT ["./StockSimulator"]

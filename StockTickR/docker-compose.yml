@@ -51,7 +51,7 @@ services:
     depends_on:
       - "stockprocessor" 
     build:
-      context: StockCollector/
+      context: StockSimulator/
       dockerfile: Dockerfile    
     networks:
       - stocksnetwork    

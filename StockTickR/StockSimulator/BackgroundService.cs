@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace StockCollector {
+namespace StockSimulator {
     // Copyright (c) .NET Foundation. Licensed under the Apache License, Version 2.0.
     /// <summary>
     /// Base class for implementing a long running <see cref="IHostedService"/>.

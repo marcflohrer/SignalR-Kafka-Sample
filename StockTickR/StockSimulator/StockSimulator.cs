@@ -9,8 +9,8 @@ using AngleSharp.Extensions;
 using AngleSharp.Parser.Html;
 using StockProcessor.Models;
 
-namespace StockCollector {
-    public class StockCollector {
+namespace StockSimulator {
+    public class StockSimulator {
         private static short selectorStockFirstIndex = 2;
         private static short selectorStockLastIndex = 31;
 
@@ -106,7 +106,7 @@ namespace StockCollector {
             }
         }
 
-        public StockCollector () {
+        public StockSimulator () {
             var envVars = Environment.GetEnvironmentVariables ();
             foreach (string key in envVars.Keys) {
                 Console.WriteLine ("[Info] " + DateTime.Now + " environment variable>" + key + " : " + (string) envVars[key]);

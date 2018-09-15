@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 using StockProcessor.Models;
 using StockTickR.Clients;
 
-namespace StockCollector {
+namespace StockSimulator {
     class Program {
         static void Main (string[] args) {
             var source = new CancellationTokenSource ();
-            var stockCollector = new StockCollector ();
+            var stockCollector = new StockSimulator ();
             try {
                 var service = new StockCollectionService ();
                 var token = source.Token;
