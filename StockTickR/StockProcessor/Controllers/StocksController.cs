@@ -10,26 +10,24 @@ namespace StocksDatabase.Controllers {
     [Route ("[controller]")]
     public class StocksController : Controller {
 
-        public IUnitOfWork UnitOfWork { get; }
-        private Serilog.ILogger _logger { get; }
+        private Serilog.ILogger _logger {
+            get;
+        }
 
-        public StocksController (IUnitOfWork unitOfWork, Serilog.ILogger logger) {
-            UnitOfWork = unitOfWork;
+        public StocksController (Serilog.ILogger logger) {
             _logger = logger;
         }
 
         // GET: /stocks/
         [HttpGet]
         public IEnumerable<Stock> Get () {
-            _logger.Debug ("public IEnumerable<Stock> Get");
-            return UnitOfWork.Stocks.GetAll ();
+            return null;
         }
 
         // GET: /stocks/1
         [HttpGet ("{id:int}")]
         public Stock Get (int id) {
-            _logger.Debug ("public Stock Get");
-            return UnitOfWork.Stocks.Get (id);
+            return null;
         }
 
         // POST: stocks/
@@ -55,7 +53,7 @@ namespace StocksDatabase.Controllers {
         }
 
         private IActionResult UpdateStockInDatabase (Stock stock) {
-            return ExecuteTransaction (() => UnitOfWork.Stocks.Update (stock));
+            return null;
         }
 
         private void WatchOneStock (Stock stock, string prefix) {
@@ -66,7 +64,7 @@ namespace StocksDatabase.Controllers {
         }
 
         private IActionResult InsertToDatabase (Stock stock) {
-            return ExecuteTransaction (() => UnitOfWork.Stocks.Insert (stock));
+            return null;
         }
 
         // POST: stocks/
@@ -111,12 +109,10 @@ namespace StocksDatabase.Controllers {
         }
 
         private Stock GetDbEntity (Stock stock) {
-            return UnitOfWork.Stocks.GetStockBySymbol (stock.Symbol);
+            return null;
         }
 
         private IActionResult ExecuteTransaction (Action action) {
-            action.Invoke ();
-            UnitOfWork.Complete ();
             return RedirectToAction ("Index");
         }
     }

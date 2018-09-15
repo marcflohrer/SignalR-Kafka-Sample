@@ -34,5 +34,10 @@
   <ItemGroup>
     <Compile Remove="Repositories\Core\IgnoreMemberAttribute.cs" />
     <Compile Remove="Controllers\ErrorsController.cs" />
+    <Compile Remove="Repositories\Core\DbContextExtension.cs" />
+    <Compile Remove="Repositories\StockDbContext.cs" />
+    <Compile Remove="Repositories\StockRepository.cs" />
+    <Compile Remove="Repositories\UnitOfWork.cs" />
+    <Compile Remove="Repositories\Interfaces\IUnitOfWork.cs" />
   </ItemGroup>
 </Project>

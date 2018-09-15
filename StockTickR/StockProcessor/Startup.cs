@@ -55,8 +55,6 @@ namespace StockProcessor {
             Log.Logger = new LoggerConfiguration ()
                 .ReadFrom.Configuration (Configuration.GetSection ("Logging"))
                 .MinimumLevel.Override ("Microsoft", LogEventLevel.Warning)
-                //.Enrich.FromLogContext()
-                //.Enrich.WithProperty ("Environment", HostingEnvironment.EnvironmentName)
                 .WriteTo.Console (outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {EventId} {Message:lj} {Properties}{NewLine}{Exception}{NewLine}")
                 .CreateLogger ();
 
@@ -64,13 +62,8 @@ namespace StockProcessor {
             services.AddLogging (loggingBuilder => loggingBuilder.AddSerilog (dispose: true));
             services.AddSingleton (Configuration);
 
-            services.AddScoped<IStockRepository, StockRepository> ();
-            services.AddScoped<IUnitOfWork, UnitOfWork> ();
             services.AddScoped<StocksController, StocksController> ();
             services.AddSingleton<StockProcessorSubscription> ();
-            services.AddDbContext<StockDbContext> ();
-
-            services.AddDbContextFactory<StockDbContext> (ConnectionString);
 
             // Add IHubContext's to the dependency container using AddSignalR()
             services.AddSignalR ();

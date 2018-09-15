@@ -13,7 +13,6 @@ namespace StockProcessor {
 
             CreateWebHostBuilder (args)
                 .Build ()
-                .Seed ()
                 .Run ();
         }
 
@@ -29,18 +28,5 @@ namespace StockProcessor {
             })
             //.UseSerilog ()
             .UseStartup<Startup> ();
-    }
-
-    public static class WebHostExtension {
-        public static IWebHost Seed (this IWebHost webhost) {
-            var stockDbContext = webhost.Services.GetService<IServiceScopeFactory> ()
-                .CreateScope ()
-                .ServiceProvider
-                .GetRequiredService<StockDbContext> ();
-            if (!stockDbContext.AllMigrationsApplied ()) {
-                stockDbContext.Database.Migrate ();
-            }
-            return webhost;
-        }
     }
 }
