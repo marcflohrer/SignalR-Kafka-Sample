@@ -7,17 +7,12 @@
     <RootPackageReference>false</RootPackageReference>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Dockerfile.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Dockerfile.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.9.10" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Reactive" Version="4.1.0" />
     <PackageReference Include="Microsoft.Packaging.Tools.Trimming" Version="1.1.0-preview1-26822-01" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.6" />
+    <PackageReference Include="Confluent.Kafka" Version="0.11.5" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
