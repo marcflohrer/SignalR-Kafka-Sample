@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o ./deployment/
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: stockcollector
+  name: stockcollector
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: stockcollector
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              key: ASPNETCORE_ENVIRONMENT
+              name: stockcollector-env
+        - name: CULTURE_IDENTIFIER
+          valueFrom:
+            configMapKeyRef:
+              key: CULTURE_IDENTIFIER
+              name: stockcollector-env
+        - name: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
+          valueFrom:
+            configMapKeyRef:
+              key: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
+              name: stockcollector-env
+        - name: DOWJONES_BIDPRICE_SELECTOR
+          valueFrom:
+            configMapKeyRef:
+              key: DOWJONES_BIDPRICE_SELECTOR
+              name: stockcollector-env
+        - name: DOWJONES_LISTING_URL
+          valueFrom:
+            configMapKeyRef:
+              key: DOWJONES_LISTING_URL
+              name: stockcollector-env
+        - name: DOWJONES_STOCKNAME_SELECTOR
+          valueFrom:
+            configMapKeyRef:
+              key: DOWJONES_STOCKNAME_SELECTOR
+              name: stockcollector-env
+        - name: LOCAL_PGDATA
+          valueFrom:
+            configMapKeyRef:
+              key: LOCAL_PGDATA
+              name: stockcollector-env
+        - name: SA_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: SA_PASSWORD
+              name: stockcollector-env
+        - name: STOCK_TO_WATCH
+          valueFrom:
+            configMapKeyRef:
+              key: STOCK_TO_WATCH
+              name: stockcollector-env
+        image: stockcollector
+        name: stockcollector
+        resources: {}
+      restartPolicy: Always
+status: {}

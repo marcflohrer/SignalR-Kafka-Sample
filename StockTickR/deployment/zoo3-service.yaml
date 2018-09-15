@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o ./deployment/
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: zoo3
+  name: zoo3
+spec:
+  ports:
+  - name: "2183"
+    port: 2183
+    targetPort: 2183
+  selector:
+    io.kompose.service: zoo3
+status:
+  loadBalancer: {}

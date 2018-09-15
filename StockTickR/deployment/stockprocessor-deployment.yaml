@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o ./deployment/
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: stockprocessor
+  name: stockprocessor
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: stockprocessor
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              key: ASPNETCORE_ENVIRONMENT
+              name: stockprocessor-env
+        - name: CULTURE_IDENTIFIER
+          valueFrom:
+            configMapKeyRef:
+              key: CULTURE_IDENTIFIER
+              name: stockprocessor-env
+        - name: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
+          valueFrom:
+            configMapKeyRef:
+              key: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
+              name: stockprocessor-env
+        - name: DOWJONES_BIDPRICE_SELECTOR
+          valueFrom:
+            configMapKeyRef:
+              key: DOWJONES_BIDPRICE_SELECTOR
+              name: stockprocessor-env
+        - name: DOWJONES_LISTING_URL
+          valueFrom:
+            configMapKeyRef:
+              key: DOWJONES_LISTING_URL
+              name: stockprocessor-env
+        - name: DOWJONES_STOCKNAME_SELECTOR
+          valueFrom:
+            configMapKeyRef:
+              key: DOWJONES_STOCKNAME_SELECTOR
+              name: stockprocessor-env
+        - name: LOCAL_PGDATA
+          valueFrom:
+            configMapKeyRef:
+              key: LOCAL_PGDATA
+              name: stockprocessor-env
+        - name: SA_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: SA_PASSWORD
+              name: stockprocessor-env
+        - name: STOCK_TO_WATCH
+          valueFrom:
+            configMapKeyRef:
+              key: STOCK_TO_WATCH
+              name: stockprocessor-env
+        image: stockprocessor
+        name: stockprocessor
+        resources: {}
+      restartPolicy: Always
+status: {}

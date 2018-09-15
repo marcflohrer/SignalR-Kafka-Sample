@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o ./deployment/
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: zoo1
+  name: zoo1
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: zoo1
+    spec:
+      containers:
+      - env:
+        - name: ZOO_MY_ID
+          value: "1"
+        - name: ZOO_PORT
+          value: "2181"
+        - name: ZOO_SERVERS
+          value: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+        image: zookeeper:3.4.9
+        name: zoo1
+        ports:
+        - containerPort: 2181
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: zoo1-claim0
+        - mountPath: /datalog
+          name: zoo1-claim1
+      hostname: zoo1
+      restartPolicy: Always
+      volumes:
+      - name: zoo1-claim0
+        persistentVolumeClaim:
+          claimName: zoo1-claim0
+      - name: zoo1-claim1
+        persistentVolumeClaim:
+          claimName: zoo1-claim1
+status: {}

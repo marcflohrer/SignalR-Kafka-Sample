@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o ./deployment/
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: kafka1
+  name: kafka1
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kafka1
+    spec:
+      containers:
+      - env:
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://127.0.0.1:9092
+        - name: KAFKA_BROKER_ID
+          value: "1"
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: LISTENER_DOCKER_INTERNAL
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+        - name: KAFKA_LOG4J_LOGGERS
+          value: kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: zoo1:2181,zoo2:2182,zoo3:2183
+        image: confluentinc/cp-kafka:5.0.0
+        name: kafka1
+        ports:
+        - containerPort: 9092
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/kafka/data
+          name: kafka1-claim0
+      hostname: kafka1
+      restartPolicy: Always
+      volumes:
+      - name: kafka1-claim0
+        persistentVolumeClaim:
+          claimName: kafka1-claim0
+status: {}
