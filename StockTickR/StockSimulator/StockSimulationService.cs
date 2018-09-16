@@ -10,9 +10,9 @@ using StockTickR.Clients;
 namespace StockSimulator {
     public class StockCollectionService : BackgroundService {
         protected override Task ExecuteAsync (CancellationToken stoppingToken) {
-            var stockCollector = new StockSimulator ();
+            var stockSimulator = new StockSimulator ();
             var stockClient = new StockClient ();
-            var observable = stockCollector.StocksStream (TimeSpan.FromSeconds (3), stoppingToken)
+            var observable = stockSimulator.StocksStream (TimeSpan.FromSeconds (3), stoppingToken)
                 .Where (stocks => stocks.Any ())
                 .DistinctUntilChanged ()
                 .Do (stocks => stockClient.AddRange (stocks))

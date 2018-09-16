@@ -12,7 +12,7 @@ namespace StockSimulator {
     class Program {
         static void Main (string[] args) {
             var source = new CancellationTokenSource ();
-            var stockCollector = new StockSimulator ();
+            var stockSimulator = new StockSimulator ();
             try {
                 var service = new StockCollectionService ();
                 var token = source.Token;
