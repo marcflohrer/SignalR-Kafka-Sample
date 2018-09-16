@@ -7,14 +7,13 @@ namespace StockTickRApp.Hubs {
         public HubConnection HubConnection {
             get;
         }
-        public StockHubConnection (Uri uri) {
-            HubConnection = new HubConnectionBuilder ()
-                .WithUrl (CreateHubUri (uri))
-                .ConfigureLogging (logging => {
-                    logging.SetMinimumLevel (LogLevel.Debug);
+        public StockHubConnection(Uri uri) => HubConnection = new HubConnectionBuilder()
+                .WithUrl(CreateHubUri(uri))
+                .ConfigureLogging(logging =>
+                {
+                    logging.SetMinimumLevel(LogLevel.Debug);
                 })
-                .Build ();
-        }
+                .Build();
 
         private static string CreateHubUri (Uri connection) {
             UriBuilder uri = new System.UriBuilder (uri: connection);

@@ -1,17 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
+using Confluent.Kafka;
+using Confluent.Kafka.Serialization;
+using Newtonsoft.Json;
 using StockProcessor.Models;
 
 namespace StockTickR.Clients {
     public class StockClient {
         private readonly HttpClient _client;
-        MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
-        private Dictionary<string, decimal> cache = new Dictionary<string, decimal> ();
+        readonly MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
+        private readonly Dictionary<string, decimal> cache = new Dictionary<string, decimal> ();
+
+        private readonly string topicName = "Stocks";
+        Producer<string, string> producer;
 
         public StockClient () {
             _client = new HttpClient {
@@ -19,6 +27,17 @@ namespace StockTickR.Clients {
             };
             _client.DefaultRequestHeaders.Accept.Clear ();
             _client.DefaultRequestHeaders.Accept.Add (_mediaType);
+
+            string[] brokerList = {
+                "http://stocktickr_kafka1_1:9092/",
+                "http://stocktickr_kafka2_1:9092/",
+                "http://stocktickr_kafka3_1:9092/"
+                };
+
+            producer = new Producer<string, string> (
+                new Dictionary<string, object> { { "bootstrap.servers", brokerList } },
+                new StringSerializer (Encoding.UTF8), new StringSerializer (Encoding.UTF8)
+                );
         }
 
         public IEnumerable<Stock> Get () {
@@ -28,19 +47,29 @@ namespace StockTickR.Clients {
             return response.Content.ReadAsAsync<List<Stock>> ().GetAwaiter ().GetResult ();
         }
 
-        public HttpStatusCode AddRange (IEnumerable<Stock> stocks) {
+        public ErrorCode[] AddRange (IEnumerable<Stock> stocks) {
+            ErrorCode[] result = new ErrorCode[stocks.Count<Stock> ()];
             List<Stock> stocksThatChanged = FindStocksThatChanged (stocks);
             if (stocksThatChanged.Any ()) {
-                HttpResponseMessage response = null;
-                response = PostAsJsonUntilDbIsReadyAsync (stocksThatChanged, response);
-                stocksThatChanged.ForEach (stock => WatchOneStock (stock));
-                response.EnsureSuccessStatusCode ();
-                UpdateCache (stocksThatChanged);
-                return response.StatusCode;
-            } else {
-                return HttpStatusCode.OK;
+                int i = 0;
+                foreach (var stock in stocks) {
+                    var deliveryReport = producer.ProduceAsync (topicName, stock.Symbol, JsonConvert.SerializeObject (stock, typeof (Stock), new JsonSerializerSettings () {
+                        Culture = CultureInfo.InvariantCulture
+                    })).GetAwaiter ().GetResult ();
+                    result[i++] = deliveryReport.Error.Code;
+                    Console.WriteLine (
+                        deliveryReport.Error.Code == ErrorCode.NoError
+                            ? $"delivered to: {deliveryReport.TopicPartitionOffset}"
+                            : $"failed to deliver message: {deliveryReport.Error.Reason}"
+                    );
+                    if (deliveryReport.Error.Code == ErrorCode.NoError) {
+                        UpdateCache (stocksThatChanged);
+                    }
+                }
             }
+            return result;
         }
+
         private void WatchOneStock (Stock stock) {
             var stockToWatch = Environment.GetEnvironmentVariable ("STOCK_TO_WATCH") ?? "Acme Inc.";
             if (stock.Symbol == stockToWatch) {

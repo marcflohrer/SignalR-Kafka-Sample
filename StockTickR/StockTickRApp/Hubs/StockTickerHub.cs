@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Confluent.Kafka;
+using Confluent.Kafka.Serialization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using Serilog;
 using StockTickR.Clients;
 using StockTickR.Models;
@@ -30,6 +34,31 @@ namespace StockTickR.Hubs {
             Hub = hub;
             StockClient = stockClient;
             _logger = logger;
+            var conf = new Dictionary<string, object> { { "group.id", "test-consumer-group" },
+                    { "bootstrap.servers", "stocktickr_kafka1_1:9092" },
+                    { "auto.commit.interval.ms", 5000 },
+                    { "auto.offset.reset", "earliest" }
+                };
+
+            using (var consumer = new Consumer<string, Stock> (conf, new KeyDeserializer(), new StockDeserializer())) {
+                consumer.OnMessage += (_, msg) => OnMessage (msg);
+                consumer.OnError += (_, error) => OnError (error);
+                consumer.OnConsumeError += (_, msg) => OnConsumeError (msg);
+                consumer.Subscribe ("Stocks");
+            }        
+        }
+
+        private static void OnConsumeError (Message msg) {
+            Console.WriteLine ($"Consume error ({msg.TopicPartitionOffset}): {msg.Error}");
+        }
+
+        private static void OnError (Error error) {
+            Console.WriteLine ($"Error: {error}");
+        }
+
+        private static void OnMessage (Message<string, Stock> msg) {
+            Console.WriteLine ($"Read '{msg.Value}' from: {msg.TopicPartitionOffset}");
+            StocksObservable.OnNext (msg.Value);
         }
 
         public string GetMarketState () => MarketState.ToString ();
@@ -92,5 +121,101 @@ namespace StockTickR.Hubs {
     public enum MarketState {
         Closed,
         Open
+    }
+
+    public class StockDeserializer : IDeserializer<Stock>
+    {
+        public IEnumerable<KeyValuePair<string, object>> Configure(IEnumerable<KeyValuePair<string, object>> config, bool isKey)
+        {
+            return config;
+        }
+
+        public Stock Deserialize(string topic, byte[] bytes)
+        {
+            return JsonConvert.DeserializeObject<Stock>(Encoding.UTF8.GetString(bytes));
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~StockDeserializer() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
+    }
+
+    public class KeyDeserializer : IDeserializer<String>
+    {
+        public IEnumerable<KeyValuePair<string, object>> Configure(IEnumerable<KeyValuePair<string, object>> config, bool isKey)
+        {
+            return config;
+        }
+
+        public String Deserialize(string topic, byte[] bytes)
+        {
+            return JsonConvert.DeserializeObject<String>(Encoding.UTF8.GetString(bytes));
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~StockDeserializer() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }
