@@ -6,8 +6,8 @@ metadata:
     kompose.version: 1.16.0 (0c01309)
   creationTimestamp: null
   labels:
-    io.kompose.service: stockcollector
-  name: stockcollector
+    io.kompose.service: stocksimulator
+  name: stocksimulator
 spec:
   replicas: 1
   strategy: {}
@@ -15,7 +15,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: stockcollector
+        io.kompose.service: stocksimulator
     spec:
       containers:
       - env:
@@ -23,49 +23,49 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: ASPNETCORE_ENVIRONMENT
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: CULTURE_IDENTIFIER
           valueFrom:
             configMapKeyRef:
               key: CULTURE_IDENTIFIER
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
           valueFrom:
             configMapKeyRef:
               key: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: DOWJONES_BIDPRICE_SELECTOR
           valueFrom:
             configMapKeyRef:
               key: DOWJONES_BIDPRICE_SELECTOR
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: DOWJONES_LISTING_URL
           valueFrom:
             configMapKeyRef:
               key: DOWJONES_LISTING_URL
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: DOWJONES_STOCKNAME_SELECTOR
           valueFrom:
             configMapKeyRef:
               key: DOWJONES_STOCKNAME_SELECTOR
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: LOCAL_PGDATA
           valueFrom:
             configMapKeyRef:
               key: LOCAL_PGDATA
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: SA_PASSWORD
           valueFrom:
             configMapKeyRef:
               key: SA_PASSWORD
-              name: stockcollector-env
+              name: stocksimulator-env
         - name: STOCK_TO_WATCH
           valueFrom:
             configMapKeyRef:
               key: STOCK_TO_WATCH
-              name: stockcollector-env
-        image: stockcollector
-        name: stockcollector
+              name: stocksimulator-env
+        image: stocksimulator
+        name: stocksimulator
         resources: {}
       restartPolicy: Always
 status: {}

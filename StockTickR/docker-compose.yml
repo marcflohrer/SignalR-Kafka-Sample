@@ -13,8 +13,8 @@ services:
     networks:
       - stocksnetwork 
 
-  stockcollector:
-    image: stockcollector
+  stocksimulator:
+    image: stocksimulator
     restart: always
     env_file:
       - .env

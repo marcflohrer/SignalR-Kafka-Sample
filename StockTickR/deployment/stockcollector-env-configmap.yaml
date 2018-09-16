@@ -14,5 +14,5 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: stockcollector-env
-  name: stockcollector-env
+    io.kompose.service: stocksimulator-env
+  name: stocksimulator-env
