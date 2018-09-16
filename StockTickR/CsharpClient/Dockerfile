@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-alpine3.7 AS build
+FROM microsoft/dotnet:2.1-sdk-alpine3.7@sha256:d340d97ed80dc3cecedabbb0aca77f5691c19b810a91bf8e9973e4db342d44da AS build
 WORKDIR /src
 
 COPY *.csproj ./
