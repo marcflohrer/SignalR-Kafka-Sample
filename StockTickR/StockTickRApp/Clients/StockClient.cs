@@ -11,6 +11,8 @@ namespace StockTickR.Clients {
         public StockClient (Uri connection) {
             Connection = connection;
         }
+        private HttpClient _httpClient;
+        MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
 
         private void InitHttpClient () {
             _httpClient = new HttpClient {
@@ -19,9 +21,6 @@ namespace StockTickR.Clients {
             _httpClient.DefaultRequestHeaders.Accept.Clear ();
             _httpClient.DefaultRequestHeaders.Accept.Add (_mediaType);
         }
-
-        private HttpClient _httpClient;
-        MediaTypeWithQualityHeaderValue _mediaType = new MediaTypeWithQualityHeaderValue ("application/json");
 
         public Uri Connection {
             get;
