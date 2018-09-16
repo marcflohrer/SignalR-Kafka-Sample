@@ -11,7 +11,7 @@ using StockProcessor.Hubs;
 using StockProcessor.Repositories;
 using StockProcessor.Repositories.Interfaces;
 using StockProcessor.Subscriptions;
-using StocksDatabase.Controllers;
+using StocksProcessor.Controllers;
 
 namespace StockProcessor {
     public class Startup {

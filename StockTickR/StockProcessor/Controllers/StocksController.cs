@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockProcessor.Models;
 using StockProcessor.Repositories.Interfaces;
 
-namespace StocksDatabase.Controllers {
+namespace StocksProcessor.Controllers {
     [Route ("[controller]")]
     public class StocksController : Controller {
 
