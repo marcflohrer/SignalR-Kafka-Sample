@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
-using StockProcessor.Extensions;
 using StockProcessor.Hubs;
 using StockProcessor.Repositories;
 using StockProcessor.Repositories.Interfaces;
@@ -18,7 +17,7 @@ namespace StockProcessor {
         public Startup (IHostingEnvironment env) {
             Configuration = new ConfigurationBuilder ()
                 .SetBasePath (env.ContentRootPath)
-                .AddJsonFile ("appsettings.json", optional : true, reloadOnChange : true)
+                .AddJsonFile ("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile ($"appsettings.{env.EnvironmentName}.json")
                 .AddEnvironmentVariables ()
                 .Build ();
@@ -97,8 +96,6 @@ namespace StockProcessor {
             });
 
             app.UseMvc ();
-
-            app.UseSqlTableDependency<StockProcessorSubscription> (ConnectionString);
         }
     }
 }
