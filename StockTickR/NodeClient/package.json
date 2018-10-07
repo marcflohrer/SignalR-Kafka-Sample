@@ -1,15 +1,15 @@
 {
   "dependencies": {
-    "eventsource": "^1.0.5",
+    "eventsource": "^1.0.7",
     "tslib": "^1.9.3",
-    "websocket": "^1.0.24",
+    "websocket": "^1.0.28",
     "xmlhttprequest": "^1.8.0"
   },
   "files": [
     "src/**/*"
   ],
   "devDependencies": {
-    "@aspnet/signalr": "^1.0.0-rc1-final",
-    "@types/node": "^8.0.32"
+    "@aspnet/signalr": "^1.0.4",
+    "@types/node": "^8.10.34"
   }
 }
